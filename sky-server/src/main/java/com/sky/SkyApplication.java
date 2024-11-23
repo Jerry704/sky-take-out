@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Slf4j
 public class SkyApplication {
     public static void main(String[] args) {
+        //前端需要打開nginx.exe才連得上
         SpringApplication.run(SkyApplication.class, args);
         log.info("server started");
     }
