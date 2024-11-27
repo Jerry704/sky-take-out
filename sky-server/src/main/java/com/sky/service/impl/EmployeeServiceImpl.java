@@ -113,5 +113,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total,records);
     }
 
+    /**
+     * 啟用/禁用員工帳號
+     * @param status
+     * @param id
+     * @return
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //update employee set status = ? where id = ?
+
+        /* 普通寫法
+        Employee employee = new Employee();
+        employee.setStatus(status);
+        employee.setId(id);*/
+
+        //構建器對象
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        //傳遞動態實體類可以讓方法更活用
+        employeeMapper.update(employee);
+    }
+
 
 }
