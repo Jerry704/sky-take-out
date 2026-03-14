@@ -10,6 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sky-common</artifactId>
     <dependencies>
+        <!-- 加入 Cloudinary -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

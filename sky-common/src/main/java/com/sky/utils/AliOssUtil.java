@@ -9,8 +9,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 
-@Data
-@AllArgsConstructor
+//@Data
+//@AllArgsConstructor
 @Slf4j
 public class AliOssUtil {
 

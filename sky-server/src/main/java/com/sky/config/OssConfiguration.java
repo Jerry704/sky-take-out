@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 配置類，用於創建aliossUtil對象
  */
-@Configuration
+//@Configuration
 @Slf4j
 public class OssConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean //當沒有這個工具再建立
-    public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties){
-        log.info("開始創建阿里雲文件上傳工具類對象: {}", aliOssProperties);
-        return new AliOssUtil(aliOssProperties.getEndpoint(),
-                aliOssProperties.getAccessKeyId(),
-                aliOssProperties.getAccessKeySecret(),
-                aliOssProperties.getBucketName());
-    }
+//    @Bean
+//    @ConditionalOnMissingBean //當沒有這個工具再建立
+//    public AliOssUtil aliOssUtil(AliOssProperties aliOssProperties){
+//        log.info("開始創建阿里雲文件上傳工具類對象: {}", aliOssProperties);
+//        return new AliOssUtil(aliOssProperties.getEndpoint(),
+//                aliOssProperties.getAccessKeyId(),
+//                aliOssProperties.getAccessKeySecret(),
+//                aliOssProperties.getBucketName());
+//    }
 }

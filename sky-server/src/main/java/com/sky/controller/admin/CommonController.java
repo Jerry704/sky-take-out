@@ -4,6 +4,7 @@ package com.sky.controller.admin;
 import com.sky.constant.MessageConstant;
 import com.sky.result.Result;
 import com.sky.utils.AliOssUtil;
+import com.sky.utils.CloudinaryUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,10 @@ import java.util.UUID;
 @Slf4j //日誌
 public class CommonController {
 
+//    @Autowired
+//    private AliOssUtil aliOssUtil;
     @Autowired
-    private AliOssUtil aliOssUtil;
+    private CloudinaryUtil cloudinaryUtil; // 1. 替換注入對象
 
 
 
@@ -35,23 +38,47 @@ public class CommonController {
      * @param file
      * @return
      */
+//    @PostMapping("/upload")
+//    @ApiOperation("文件上傳")
+//    public Result<String> upload(MultipartFile file){
+//        log.info("文件上傳: {}",file);
+//
+//        try {
+//            //原始檔名
+//            String originalFilename = file.getOriginalFilename();
+//            //擷取原始檔名
+//            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+//            String objectName = UUID.randomUUID().toString() + extension;
+//
+//            //文件請求路徑
+//            String filePath = aliOssUtil.upload(file.getBytes(),objectName);
+//            return Result.success(filePath);
+//        } catch (IOException e) {
+//            log.error("文件上傳失敗: {}",e);
+//        }
+//
+//        return Result.error(MessageConstant.UPLOAD_FAILED);
+//    }
+    /**
+     * 文件上傳
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     @ApiOperation("文件上傳")
-    public Result<String> upload(MultipartFile file){
-        log.info("文件上傳: {}",file);
+    public Result<String> upload(MultipartFile file) {
+        log.info("開始上傳文件：{}", file.getOriginalFilename());
 
         try {
-            //原始檔名
-            String originalFilename = file.getOriginalFilename();
-            //擷取原始檔名
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String objectName = UUID.randomUUID().toString() + extension;
+            // 2. 調用 Cloudinary 工具類上傳
+            // 建議傳入資料夾名稱（例如 "sky-takeout"），方便在 Cloudinary 後台管理
+            String filePath = cloudinaryUtil.upload(file.getBytes(), "sky-takeout");
 
-            //文件請求路徑
-            String filePath = aliOssUtil.upload(file.getBytes(),objectName);
+            log.info("文件上傳成功，路徑為：{}", filePath);
             return Result.success(filePath);
+
         } catch (IOException e) {
-            log.error("文件上傳失敗: {}",e);
+            log.error("文件上傳失敗：{}", e.getMessage());
         }
 
         return Result.error(MessageConstant.UPLOAD_FAILED);

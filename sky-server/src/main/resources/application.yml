@@ -42,3 +42,8 @@ sky:
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss. access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
+
+  cloudinary:
+      cloud-name: ${CLOUDINARY_NAME}
+      api-key: ${CLOUDINARY_KEY}
+      api-secret: ${CLOUDINARY_SECRET}
