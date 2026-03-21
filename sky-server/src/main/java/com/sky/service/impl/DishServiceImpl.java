@@ -99,12 +99,21 @@ public class DishServiceImpl implements DishService {
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
         //3.刪除菜品表中數據
-        for (Long id : ids) {
+        //for循環會發送大量sql語句，性能較差
+       /* for (Long id : ids) {
             dishMapper.deleteById(id);
             //4.刪除菜品關聯口味
             dishFlavorMapper.deleteByDishId(id);
-        }
+        }*/
 
+        //改良版
+        //3.批量刪除菜品表中數據
+        //sql: delete from dish where id in(?,?,?)
+        dishMapper.deleteByIds(ids);
+
+        //4.批量刪除菜品關聯口味
+        //sql: delete from dish_flavor where dish_id in(?,?,?)
+        dishFlavorMapper.deleteByDishIds(ids);
 
     }
 }
