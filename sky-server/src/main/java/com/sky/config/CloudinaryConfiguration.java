@@ -3,6 +3,7 @@ package com.sky.config;
 import com.sky.properties.CloudinaryProperties;
 import com.sky.utils.CloudinaryUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class CloudinaryConfiguration {
     @Bean
+    @ConditionalOnMissingBean
     public CloudinaryUtil cloudinaryUtil(CloudinaryProperties props) {
         log.info("開始創建 Cloudinary 工具類對象: {}", props.getCloudName());
         return new CloudinaryUtil(

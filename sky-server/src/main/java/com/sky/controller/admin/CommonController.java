@@ -71,7 +71,7 @@ public class CommonController {
 
         try {
             // 2. 調用 Cloudinary 工具類上傳
-            // 建議傳入資料夾名稱（例如 "sky-takeout"），方便在 Cloudinary 後台管理
+            // 資料夾名稱建議"sky-takeout"，方便在Cloudinary後台管理
             String filePath = cloudinaryUtil.upload(file.getBytes(), "sky-takeout");
 
             log.info("文件上傳成功，路徑為：{}", filePath);

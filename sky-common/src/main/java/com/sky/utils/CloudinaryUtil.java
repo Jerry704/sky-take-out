@@ -26,8 +26,7 @@ public class CloudinaryUtil {
         // 2. 直接建立 Cloudinary 物件
         this.cloudinary = new Cloudinary(config);
 
-        // 3. 如果找不到 set 方法，請檢查是否漏掉了 http5 的依賴
-        // 如果編譯器提示找不到這兩個方法，請嘗試直接在 upload 時指定
+
     }
 
     public String upload(byte[] bytes, String folder) {
