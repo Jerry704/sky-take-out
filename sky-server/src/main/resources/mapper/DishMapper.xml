@@ -59,7 +59,7 @@
             and category_id = #{categoryId}
         </if>
         <if test="status != null">
-            and status = # {status}
+            and status = #{status}
         </if>
         </where>
         order by create_time desc
