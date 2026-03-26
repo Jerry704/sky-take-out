@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+//套餐內的菜品 	一個套餐對應多筆資料
 @Mapper
 public interface SetmealDishMapper {
 
@@ -20,4 +21,10 @@ public interface SetmealDishMapper {
      * @param setmealDishes
      */
     void insertBatch(List<SetmealDish> setmealDishes);
+
+    /**
+     * 靠id刪除套餐和菜品的關聯
+     * @param setmealId
+     */
+    void deleteBySetmealId(Long setmealId);
 }

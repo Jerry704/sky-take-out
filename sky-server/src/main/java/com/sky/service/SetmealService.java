@@ -6,6 +6,8 @@ import com.sky.result.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 public interface SetmealService {
 
@@ -24,4 +26,11 @@ public interface SetmealService {
      * @return
      */
     PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 批量刪除套餐
+     * @param ids
+     * @return
+     */
+    void deleteBatch(List<Long> ids);
 }
