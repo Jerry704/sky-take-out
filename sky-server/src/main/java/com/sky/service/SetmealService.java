@@ -24,28 +24,36 @@ public interface SetmealService {
     /**
      * 分頁查詢
      * @param setmealPageQueryDTO
-     * @return
+     *
      */
     PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
     /**
      * 批量刪除套餐
      * @param ids
-     * @return
+     *
      */
     void deleteBatch(List<Long> ids);
 
     /**
      * 靠id查套餐，回傳前端用於修改
      * @param id
-     * @return
+     *
      */
     SetmealVO getByIdWithDish(Long id);
 
     /**
      * 修改套餐
      * @param setmealDTO
-     * @return
+     *
      */
     void update(SetmealDTO setmealDTO);
+
+    /**
+     * 套餐起售停售
+     * @param status
+     * @param id
+     *
+     */
+    void startOrStop(Integer status, Long id);
 }
