@@ -35,7 +35,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
     /**
-     * 注册自定义拦截器
+     * 注册自訂義攔截器
      *
      * @param registry
      */
@@ -52,7 +52,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     }
 
     /**
-     * 通过knife4j生成接口文档
+     * 通過knife4j生成接口文檔
      * @return
      */
     @Bean
@@ -92,7 +92,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     }
 
     /**
-     * 设置静态资源映射
+     * 設置靜態資源映射
      * @param registry
      */
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
