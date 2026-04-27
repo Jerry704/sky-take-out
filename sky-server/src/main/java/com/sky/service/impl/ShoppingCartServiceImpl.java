@@ -73,7 +73,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCart.setName(setmeal.getName());
                 shoppingCart.setImage(setmeal.getImage());
                 shoppingCart.setAmount(setmeal.getPrice());
-
+                /**
+                 * 注意到這裡沒有setDishFlavor，但是insert後DB會出現正確的dishFlavor，
+                 原因在1.前面拷貝DTO屬性時有拷貝
+                 2.insert語句中有插入dish_flavor內容，所以DB會顯示正確的dish_flavor
+                 */
             }
             //設置數量與時間
             shoppingCart.setNumber(1);
@@ -83,5 +87,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         }
 
+    }
+
+    /**
+     * 查看購物車
+     *
+     * @return
+     */
+    @Override
+    public List<ShoppingCart> showShoppingCart() {
+        //獲取當前用戶id
+        Long userId = BaseContext.getCurrentId();
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .userId(userId)
+                .build();
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+        return list;
     }
 }
