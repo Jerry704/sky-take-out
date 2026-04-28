@@ -6,7 +6,6 @@ import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.ShoppingCart;
 import com.sky.mapper.DishMapper;
-import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
@@ -45,7 +44,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         //將userId給購物車
         Long userId = BaseContext.getCurrentId();
         shoppingCart.setUserId(userId);
-
+        //查詢購物車內容
         List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
 
         //已存在執行修改操作(修改數量)
@@ -107,11 +106,44 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     /**
      * 清空購物車
-     *
      */
     @Override
     public void cleanShoppingCart() {
         Long userId = BaseContext.getCurrentId();
         shoppingCartMapper.deleteByUserId(userId);
+    }
+
+
+    /**
+     * 刪除購物車中的一個商品
+     *
+     * @param shoppingCartDTO
+     */
+    @Override
+    public void subShoppingCart(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        //查詢當前用戶id，並給購物車
+        Long currentId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(currentId);
+        //查詢購物車內容
+        List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
+
+        //判斷購物車有無查詢內容
+        if (list != null && list.size() > 0) {
+            //有查詢的內容
+            shoppingCart = list.get(0);
+            //獲取出數量
+            Integer number = shoppingCart.getNumber();
+            if (number == 1){
+                //數量為1，刪除該行數據(注意是該表裡的id - 對應商品的唯一識別碼，不是userId)
+                shoppingCartMapper.deleteById(shoppingCart.getId());
+            }else {
+                //數量不只1，修改數量
+                shoppingCart.setNumber(shoppingCart.getNumber() - 1);
+                //改完數量後，上傳數據
+                shoppingCartMapper.updateNumberById(shoppingCart);
+            }
+        }
     }
 }

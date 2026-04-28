@@ -34,7 +34,7 @@ public class ShoppingCartController {
     }
 
     /**
-     * 查看購物車
+     * 查看購物車內容
      * @return
      */
     @GetMapping("/list")
@@ -42,6 +42,19 @@ public class ShoppingCartController {
     public Result<List<ShoppingCart>> list(){
         List<ShoppingCart> list = shoppingCartService.showShoppingCart();
         return Result.success(list);
+    }
+
+    /**
+     * 刪除購物車中的一個商品
+     * @param shoppingCartDTO
+     * @return
+     */
+    @PostMapping("/sub")
+    @ApiOperation("刪除購物車中的一個商品")
+    public Result sub(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        log.info("刪除購物車中的一個商品:{}", shoppingCartDTO);
+        shoppingCartService.subShoppingCart(shoppingCartDTO);
+        return Result.success();
     }
 
     /**

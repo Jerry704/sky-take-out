@@ -13,7 +13,7 @@ import java.util.List;
 public interface ShoppingCartMapper {
 
     /**
-     * 動態條件查詢
+     * 動態條件查詢購物車內容
      * @param shoppingCart
      * @return
      */
@@ -40,4 +40,11 @@ public interface ShoppingCartMapper {
      */
     @Delete("delete from shopping_cart where user_id = #{userId}")
     void deleteByUserId(Long userId);
+
+    /**
+     * 靠購物車表id刪除商品
+     * @param id
+     */
+    @Delete("delete from shopping_cart where id = #{id}")
+    void deleteById(Long id);
 }

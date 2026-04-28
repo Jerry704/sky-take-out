@@ -24,4 +24,11 @@ public interface ShoppingCartService {
      *
      */
     void cleanShoppingCart();
+
+    /**
+     * 刪除購物車中的一個商品
+     * @param shoppingCartDTO
+     *
+     */
+    void subShoppingCart(ShoppingCartDTO shoppingCartDTO);
 }
