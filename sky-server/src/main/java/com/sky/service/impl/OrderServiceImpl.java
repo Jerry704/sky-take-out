@@ -5,6 +5,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersSubmitDTO;
 
 import com.sky.entity.AddressBook;
+import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
@@ -14,9 +15,11 @@ import com.sky.mapper.OrderMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderSubmitVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -46,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
         //訂單表 對 訂單明細表 1對多關係
 
-        //處理業務異常
+        //1.處理業務異常
         //地址為空
         AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
         if (addressBook==null){
@@ -62,13 +65,27 @@ public class OrderServiceImpl implements OrderService {
             throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
         }
 
-        //向訂單表插入1條數據
+        //2.向訂單表插入1條數據
+        Orders orders =new Orders();
+        //拷貝屬性
+        BeanUtils.copyProperties(ordersSubmitDTO,orders);
+        orders.setOrderTime(LocalDateTime.now());
+        orders.setPayStatus(Orders.UN_PAID);
+        orders.setStatus(Orders.PENDING_PAYMENT);
+        orders.setNumber(String.valueOf(System.currentTimeMillis()));
+        orders.setPhone(addressBook.getPhone());
+        //收件人
+        orders.setConsignee(addressBook.getConsignee());
+        orders.setUserId(userId);
+        orders.setAddress(addressBook.getDetail());
 
-        //向訂單明細表插入可能n條數據
+        orderMapper.insert(orders);
 
-        //清空購物車
+        //3.向訂單明細表插入可能n條數據
 
-        //封裝vo返回
+        //4.清空購物車
+
+        //5.封裝vo返回
         return null;
     }
 }
