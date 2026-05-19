@@ -5,6 +5,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.OrdersSubmitDTO;
 
 import com.sky.entity.AddressBook;
+import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.AddressBookBusinessException;
@@ -18,8 +19,10 @@ import com.sky.vo.OrderSubmitVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
      * @param ordersSubmitDTO
      * @return
      */
+    @Transactional
     @Override
     public OrderSubmitVO submitOrder(OrdersSubmitDTO ordersSubmitDTO) {
         //訂單表 對 訂單明細表 1對多關係
@@ -82,10 +86,31 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.insert(orders);
 
         //3.向訂單明細表插入可能n條數據
+        //批量插入數據
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+
+        for (ShoppingCart cart : shoppingCartList) {
+            //封裝成OrderDetail
+            OrderDetail orderDetail = new OrderDetail();
+            BeanUtils.copyProperties(cart, orderDetail);
+            //設置訂單id
+            orderDetail.setOrderId(orders.getId());
+            orderDetailList.add(orderDetail);
+        }
+
+        orderDetailMapper.insertBatch(orderDetailList);
 
         //4.清空購物車
+        shoppingCartMapper.deleteByUserId(userId);
 
         //5.封裝vo返回
-        return null;
+        OrderSubmitVO orderSubmitVO = OrderSubmitVO.builder()
+                .id(orders.getId())
+                .orderTime(orders.getOrderTime())
+                .orderNumber(orders.getNumber())
+                .orderAmount(orders.getAmount())
+                .build();
+
+        return orderSubmitVO;
     }
 }
