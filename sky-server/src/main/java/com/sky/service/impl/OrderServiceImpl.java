@@ -48,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private WeChatPayUtil weChatPayUtil;
 
+    private Orders orders;
+
     /**
      * 用戶下訂
      *
@@ -62,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
         //1.處理業務異常
         //地址為空
         AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
-        if (addressBook==null){
+        if (addressBook == null) {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
 
@@ -71,14 +73,14 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUserId(userId);
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
-        if (shoppingCartList == null || shoppingCartList.isEmpty()){
+        if (shoppingCartList == null || shoppingCartList.isEmpty()) {
             throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
         }
 
         //2.向訂單表插入1條數據
-        Orders orders =new Orders();
+        Orders orders = new Orders();
         //拷貝屬性
-        BeanUtils.copyProperties(ordersSubmitDTO,orders);
+        BeanUtils.copyProperties(ordersSubmitDTO, orders);
         orders.setOrderTime(LocalDateTime.now());
         orders.setPayStatus(Orders.UN_PAID);
         orders.setStatus(Orders.PENDING_PAYMENT);
@@ -88,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
         orders.setConsignee(addressBook.getConsignee());
         orders.setUserId(userId);
         orders.setAddress(addressBook.getDetail());
+        this.orders = orders;
 
         orderMapper.insert(orders);
 
@@ -133,8 +136,9 @@ public class OrderServiceImpl implements OrderService {
         Long userId = BaseContext.getCurrentId();
         User user = userMapper.getById(userId);
 
+        //正式使用必須要有統一編號才能使用，練習所以跳過
         //呼叫微信支付接口，產生預付交易單
-        JSONObject jsonObject = weChatPayUtil.pay(
+    /*       JSONObject jsonObject = weChatPayUtil.pay(
                 ordersPaymentDTO.getOrderNumber(), //商戶訂單編號
                 new BigDecimal(0.01), //支付金額，單位 rmb元
                 "苍穹外卖订单", //商品描述
@@ -144,9 +148,21 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
             throw new OrderBusinessException("该订单已支付");
         }
+    */
+
+        //正式使用必須要有統一編號才能使用，測試跳過並手寫下列屬性後返回
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", "ORDERPAID");
+
 
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
+
+        Integer OrderStatus = Orders.TO_BE_CONFIRMED; //訂單狀態:已接單
+        Integer OrderPaidStatus = Orders.PAID; //付款狀態:已付款
+        LocalDateTime check_out_time = LocalDateTime.now();//更新付款時間
+        //手動更新狀態
+        orderMapper.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, this.orders.getId());
 
         return vo;
     }
